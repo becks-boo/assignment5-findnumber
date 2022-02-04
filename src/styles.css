@@ -1,0 +1,30 @@
+#container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 15px;
+    background-color: grey;
+    height: 450px;
+    width: 450px;
+    margin: auto;
+    padding: 20px;
+}
+
+.field {
+    background-color: aqua;
+    border-radius: 3px;
+    margin: 2px 2px 2px 2px;
+}
+
+.number {
+    width: 80%;
+    margin: auto;
+}
+
+.show {
+    transition: opacity 400ms;
+    background-color: red;
+}
+
+.hide {
+    opacity: 0;
+}
