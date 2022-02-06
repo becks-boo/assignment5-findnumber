@@ -20,6 +20,13 @@
     margin: auto;
 }
 
+.user-input {
+    margin: auto;
+    width: 450px;
+    border: 8px solid aqua;
+    padding: 12px;
+}
+
 .show {
     transition: opacity 400ms;
     background-color: red;

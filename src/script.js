@@ -1,92 +1,81 @@
-const zahlenArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+function getFieldSize() {
+    let userInput = document.getElementById("field-size");
+    return userInput.value;
+}
 
-let fieldSize = 4;
+function getFinalFieldNum() {
+    return Math.pow(getFieldSize(), 2);
+}
 
-const containerHtml = document.getElementById("container");
+function insertFields(newArray) {
+    const containerHtml = document.getElementById("container");
 
-initializeArray();
-shuffle();
-
-const divList = zahlenArray.map(number => {
-    return `<div class="field">
+    const divList = newArray.map(number => {
+        return `<div class="field">
     <span class="number">${number}</span>
 </div>`;
-});
-
-const zahlenList = document.getElementsByClassName("field");
-
-for (let div of zahlenList) {
-    div.addEventListener("click", () => {
-        console.log(div.innerText);
     });
+
+    containerHtml.innerHTML = divList.join("");
+
+    containerHtml.style.gridTemplateColumns = `repeat(${getFieldSize()}, 1fr)`;
 }
 
-containerHtml.style.gridTemplateColumns = `repeat(${fieldSize}, 1fr)`;
-
-containerHtml.innerHTML = divList.join("");
-
-function shuffle() {
+function shuffle(newArray) {
     let index = 0;
     let rand = 0;
+    let copyArray = newArray.map(() => -1);
 
-    while (index < zahlenArray.length) {
+    while (index < newArray.length) {
         do {
-            rand = Math.floor(Math.random() * 16);
-        } while (exists(rand));
-        zahlenArray[index++] = rand;
+            rand = Math.floor(Math.random() * newArray.length);
+        } while (exists(copyArray, rand));
+        copyArray[index++] = rand;
     }
+
+    return copyArray;
 }
 
-function initializeArray() {
-    for (let i = 0; i < zahlenArray.length; i++) {
-        zahlenArray[i] = -1;
-    }
+function createNewArray() {
+    return [...Array(getFinalFieldNum()).keys()];
 }
 
-function exists(rand) {
-    for (let i = 0; i < zahlenArray.length; i++) {
-        if (zahlenArray[i] === rand) {
+function exists(newArray, rand) {
+    for (let i = 0; i < newArray.length; i++) {
+        if (newArray[i] === rand) {
             return true;
         }
     }
     return false;
 }
 
-// let numberValue = document.getElementsByClassName("number");
+function startGame() {
+    const newArray = createNewArray();
+    const shuffledArray = shuffle(newArray);
+    insertFields(shuffledArray);
+    addClickHandlers(newArray);
+}
 
-// GET FIELD
-const clickFields = document.querySelectorAll(".field");
+let startBtn = document.getElementById("start");
 
-/*im CLickHandler
+startBtn.addEventListener("click", startGame);
 
-if (zahlAngeklickt !== niedrigsteZahl) {
+function addClickHandlers(sortedArray) {
+    const clickFields = document.querySelectorAll(".field");
 
-    return; // sprich, mach gar nichts
-
-}*/
-
-// CLICK ON FIELD & GET NUMBER FROM FIELD
-let copyZahlenArray = zahlenArray;
-
-clickFields.forEach(field => {
-    field.addEventListener("click", function () {
-        // VALIDATE IF IT IS THE RIGHT NUMBER
-
-      /*  if (field.outerText > i.toString()) {
-            return;
-        } else {
-            field.classList.add("hide");
-        }*/
-
-        for (let i = 0; i < copyZahlenArray.length; i++) {
-            // console.log(field.innerText, i)
-            if (field.innerText === i.toString()) {
+    clickFields.forEach(field => {
+        field.addEventListener("click", function () {
+            if (parseInt(field.innerText) === sortedArray[0]) {
                 field.classList.add("hide");
-                // console.log(field.innerText);
-                copyZahlenArray = copyZahlenArray.filter(zahl => zahl !== i);
-                console.log(copyZahlenArray);
+                sortedArray = sortedArray.filter(zahl => zahl !== sortedArray[0]);
                 return;
+            } else {
+                field.classList.add("show");
+
+                setTimeout(function() {
+                    field.classList.remove("show");
+                }, 1000);
             }
-        }
+        });
     });
-});
+}
